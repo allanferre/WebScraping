@@ -40,10 +40,15 @@ def divide_text(text):
 # Texto de exemplo
 #texto = "1952 – Singin’ In The Rain by Gene Kelly"
 
-
+ano_musica = []
+titulo_musica = []
+autor_musica = []
 for musica in musicas_somente_text:
 # Chama a função para dividir o texto
     ano, titulo, autor = divide_text(musica)
+    ano_musica.append(ano)
+    titulo_musica.append(titulo)
+    autor_musica.append(autor)
 # Imprime as informações
     print(f"Ano: {ano}")
     print(f"Título: {titulo}")
@@ -59,9 +64,9 @@ for musica in musicas_somente_text:
     titulo_formatado = titulo_formatado_espaco.replace("’", "%27")
     url_wikipedia = f"https://en.wikipedia.org/wiki/{titulo_formatado}"
     urls_wikipedia.append(url_wikipedia)
+    print("urls_wikipedia:")
     print(urls_wikipedia)
     print("....")
-    print(urls_wikipedia[0])
 
 #conferindo o link    
 print("Primeiro item do array....")
@@ -99,7 +104,7 @@ print(informacoes_coletadas)
 
 #-------------------------------------------------------------------------
 
-def extrair_titulo_link_unico(url, tag_alvo, classe_alvo, atributo_titulo):
+def extrair_genero_musical(url, tag_alvo, classe_alvo, atributo_titulo):
 
   try:
     response = requests.get(url)
@@ -129,7 +134,7 @@ def extrair_titulo_link_unico(url, tag_alvo, classe_alvo, atributo_titulo):
   except requests.exceptions.RequestException:
     return "Erro ao acessar a URL"
   
-def extrair_texto_classe(url, classe_alvo):
+def extrair_tempo_musica(url, classe_alvo):
   try:
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
@@ -150,18 +155,18 @@ def extrair_texto_classe(url, classe_alvo):
   except requests.exceptions.RequestException:
     return "Erro ao acessar a URL"  
   
-# Funcao pra pegar o genero musical
+# Exemplo pra pegar o genero musical
 url_exemplo = "https://en.wikipedia.org/wiki/As_It_Was"
 tag_alvo = "td"
 classe_alvo = "infobox-data category hlist"
 atributo_titulo = "title"
-titulo_link_encontrado = extrair_titulo_link_unico(url_exemplo, tag_alvo, classe_alvo, atributo_titulo)
+titulo_link_encontrado = extrair_genero_musical(url_exemplo, tag_alvo, classe_alvo, atributo_titulo)
 print("Print genero musical aqui....")  
 print(titulo_link_encontrado) 
 
-# Funcao pra pegar o duracao
-url_exemplo = "https://en.wikipedia.org/wiki/As_It_Was"
+# Exemplo pra pegar o duracao da musica
+url_exemplo = "https://en.wikipedia.org/wiki/Head_&_Heart"
 classe_alvo = "duration"  # Substitua pelo nome real da classe
-texto_classe_encontrado = extrair_texto_classe(url_exemplo, classe_alvo)
-print(texto_classe_encontrado)       
+texto_tempo_musica = extrair_tempo_musica(url_exemplo, classe_alvo)
+print(texto_tempo_musica)       
 
