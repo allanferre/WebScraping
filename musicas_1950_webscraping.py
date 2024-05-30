@@ -70,11 +70,23 @@ for musica in musicas_somente_text:
     ano_musica.append(ano)
     titulo_musica.append(titulo)
     autor_musica.append(autor)
-    lista_musicas_1 = np.array([urls_wikipedia, ano_musica, titulo_musica, autor_musica])
+    #lista_musicas_1 = np.array([urls_wikipedia, ano_musica, titulo_musica, autor_musica])
+    
+lista_musicas_1 = []
+array_multidimensional = []
+for i in urls_wikipedia:
+    lista_musicas_1 = [i] 
+    for j in ano_musica:
+        lista_musicas_1 = [j]
+        for k in titulo_musica:
+            lista_musicas_1 = i+j+k+','
+            for l in autor_musica:
+                lista_musicas_1 = i+j+k+l
+    array_multidimensional.append(lista_musicas_1)    
 
 print("lista_musicas_1:")
-print(lista_musicas_1[0])
-print(lista_musicas_1[1])
+print(array_multidimensional[0])
+print(array_multidimensional[1])
 print(lista_musicas_1[2])
 print(lista_musicas_1[3])
 print("....")  
