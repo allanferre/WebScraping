@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from codigo_html import pagina_html_musicas
+import numpy as np # type: ignore
 
 
 soup = BeautifulSoup(pagina_html_musicas, 'html.parser')
@@ -57,7 +58,7 @@ urls_wikipedia = []
 ano_musica = []
 titulo_musica = []
 autor_musica = []
-lista_musicas_1 = []
+lista_musicas_1 = np.empty((0, 4), dtype=object)
 for musica in musicas_somente_text:
 # Chama a função para dividir o texto
     ano, titulo, autor = divide_text(musica)
@@ -69,7 +70,7 @@ for musica in musicas_somente_text:
     ano_musica.append(ano)
     titulo_musica.append(titulo)
     autor_musica.append(autor)
-    lista_musicas_1 = list([urls_wikipedia, ano_musica, titulo_musica, autor_musica])
+    lista_musicas_1 = np.array([urls_wikipedia, ano_musica, titulo_musica, autor_musica])
 
 print("lista_musicas_1:")
 print(lista_musicas_1[0])
