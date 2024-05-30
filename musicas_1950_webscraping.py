@@ -5,8 +5,6 @@ from codigo_html import pagina_html_musicas
 
 soup = BeautifulSoup(pagina_html_musicas, 'html.parser')
 
-print("....")
-
 # encontra todas as tags <p>
 all_paragraphs = soup.find_all('p')
 
@@ -40,22 +38,26 @@ def divide_text(text):
 # Texto de exemplo
 #texto = "1952 – Singin’ In The Rain by Gene Kelly"
 
-ano_musica = []
-titulo_musica = []
-autor_musica = []
-for musica in musicas_somente_text:
-# Chama a função para dividir o texto
-    ano, titulo, autor = divide_text(musica)
-    ano_musica.append(ano)
-    titulo_musica.append(titulo)
-    autor_musica.append(autor)
-# Imprime as informações
-    print(f"Ano: {ano}")
-    print(f"Título: {titulo}")
-    print(f"Autor: {autor}")
+# ano_musica = []
+# titulo_musica = []
+# autor_musica = []
+# for musica in musicas_somente_text:
+# # Chama a função para dividir o texto
+#     ano, titulo, autor = divide_text(musica)
+#     ano_musica.append(ano)
+#     titulo_musica.append(titulo)
+#     autor_musica.append(autor)
+# # Imprime as informações
+#     print(f"Ano: {ano}")
+#     print(f"Título: {titulo}")
+#     print(f"Autor: {autor}")
 
 # Funcao pra criar o link das paginas Wikipedia
 urls_wikipedia = []
+ano_musica = []
+titulo_musica = []
+autor_musica = []
+lista_musicas_1 = []
 for musica in musicas_somente_text:
 # Chama a função para dividir o texto
     ano, titulo, autor = divide_text(musica)
@@ -64,43 +66,46 @@ for musica in musicas_somente_text:
     titulo_formatado = titulo_formatado_espaco.replace("’", "%27")
     url_wikipedia = f"https://en.wikipedia.org/wiki/{titulo_formatado}"
     urls_wikipedia.append(url_wikipedia)
-    print("urls_wikipedia:")
-    print(urls_wikipedia)
-    print("....")
+    ano_musica.append(ano)
+    titulo_musica.append(titulo)
+    autor_musica.append(autor)
+    lista_musicas_1 = list([urls_wikipedia, ano_musica, titulo_musica, autor_musica])
 
-#conferindo o link    
-print("Primeiro item do array....")
-print(urls_wikipedia[0])
-print("....")    
+print("lista_musicas_1:")
+print(lista_musicas_1[0])
+print(lista_musicas_1[1])
+print(lista_musicas_1[2])
+print(lista_musicas_1[3])
+print("....")  
     
 # funcao para fazer a solicitacao http pro site wikipedia e colher mais informacao das musicas
-def fazer_requisicoes_http(urls_wikipedia): 
+# def fazer_requisicoes_http(urls_wikipedia): 
 
-  informacoes_urls = {}
-  print("Entrou aqui....")  
-  for url in urls_wikipedia:
-    try:
-      #print("Primeiro link do array....")
-      print(urls_wikipedia)
-      response = requests.get(urls_wikipedia)
-      #response = requests.get(url)
-      #informacoes_urls[url] = {
-      informacoes_urls[urls_wikipedia] = {
-        "status_code": response.status_code,
-        "texto_pagina": response.text,
-        # Adicione outras informações desejadas aqui
-      }
-    except requests.exceptions.RequestException as e:
-      informacoes_urls[url] = {
-        "status_code": "Erro",
-        "texto_pagina": f"Erro ao acessar a URL: {e}",
-      }
-  return informacoes_urls 
+#   informacoes_urls = {}
+#   print("Entrou aqui....")  
+#   for url in urls_wikipedia:
+#     try:
+#       #print("Primeiro link do array....")
+#       print(urls_wikipedia)
+#       response = requests.get(urls_wikipedia)
+#       #response = requests.get(url)
+#       #informacoes_urls[url] = {
+#       informacoes_urls[urls_wikipedia] = {
+#         "status_code": response.status_code,
+#         "texto_pagina": response.text,
+#         # Adicione outras informações desejadas aqui
+#       }
+#     except requests.exceptions.RequestException as e:
+#       informacoes_urls[url] = {
+#         "status_code": "Erro",
+#         "texto_pagina": f"Erro ao acessar a URL: {e}",
+#       }
+#   return informacoes_urls 
 
 # Exemplo de uso
-urls_exemplo = ["https://www.example.com", "https://www.google.com", "https://www.youtube.com/"]
-informacoes_coletadas = fazer_requisicoes_http(urls_exemplo)
-print(informacoes_coletadas)
+# urls_exemplo = ["https://www.example.com", "https://www.google.com", "https://www.youtube.com/"]
+# informacoes_coletadas = fazer_requisicoes_http(urls_exemplo)
+# print(informacoes_coletadas)
 
 #-------------------------------------------------------------------------
 
@@ -155,6 +160,10 @@ def extrair_tempo_musica(url, classe_alvo):
   except requests.exceptions.RequestException:
     return "Erro ao acessar a URL"  
   
+# Genero musical
+
+# Duracao da musica
+
 # Exemplo pra pegar o genero musical
 url_exemplo = "https://en.wikipedia.org/wiki/As_It_Was"
 tag_alvo = "td"
