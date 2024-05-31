@@ -113,7 +113,7 @@ def extrair_genero_musical(url, tag_alvo, classe_alvo, atributo_titulo):
         texto_classe = classe_alvo.text.strip()
         return texto_classe
     else:
-      texto_classe = "Não consta"
+      texto_classe = "Não consta genero"
       return texto_classe
 
   except requests.exceptions.RequestException:
@@ -135,29 +135,36 @@ def extrair_tempo_musica(url, classe_alvo):
       # Retornar o texto da classe
       return texto_classe
     else:
-      return "Classe não encontrada"
+      texto_classe = "Não consta tempo"
+      return texto_classe
 
   except requests.exceptions.RequestException:
     return "Erro ao acessar a URL"  
   
-# Genero musical
+# Colher o Genero musical e a Duracao da musica
 genero_musical = []
+duracao_musica = []
 for url in urls_wikipedia:
+    # extrai o genero musical
     tag_alvo = "td"
     classe_alvo = "infobox-data category hlist"
     atributo_titulo = "title"
     genero_musical_texto = extrair_genero_musical(url, tag_alvo, classe_alvo, atributo_titulo)
     genero_musical.append(genero_musical_texto)
+    # extrai a duracao da musica
+    classe_alvo = "duration"  # Substitua pelo nome real da classe
+    texto_tempo_musica = extrair_tempo_musica(url, classe_alvo)
+    duracao_musica.append(texto_tempo_musica)
     #print("Print genero musical aqui....")  
     #print(genero_musical_texto)
   
-print(genero_musical[0])
-print(genero_musical[1])
-print(genero_musical[2])
-print(genero_musical[3])
-print(genero_musical[4])
-print(genero_musical[5])
-print(genero_musical[6])
+print(duracao_musica[0])
+print(duracao_musica[1])
+print(duracao_musica[2])
+print(duracao_musica[3])
+print(duracao_musica[4])
+print(duracao_musica[5])
+print(duracao_musica[6])
 print("....")
    
 # Duracao da musica
