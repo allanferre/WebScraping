@@ -58,7 +58,7 @@ urls_wikipedia = []
 ano_musica = []
 titulo_musica = []
 autor_musica = []
-lista_musicas_1 = np.empty((0, 4), dtype=object)
+
 for musica in musicas_somente_text:
 # Chama a função para dividir o texto
     ano, titulo, autor = divide_text(musica)
@@ -80,36 +80,11 @@ print(lista_musicas_1[0])
 print(lista_musicas_1[1])
 print(lista_musicas_1[2])
 print(lista_musicas_1[3])
+print(lista_musicas_1[4])
+print(lista_musicas_1[5])
+print(lista_musicas_1[6])
 print("....")  
-    
-# funcao para fazer a solicitacao http pro site wikipedia e colher mais informacao das musicas
-# def fazer_requisicoes_http(urls_wikipedia): 
-
-#   informacoes_urls = {}
-#   print("Entrou aqui....")  
-#   for url in urls_wikipedia:
-#     try:
-#       #print("Primeiro link do array....")
-#       print(urls_wikipedia)
-#       response = requests.get(urls_wikipedia)
-#       #response = requests.get(url)
-#       #informacoes_urls[url] = {
-#       informacoes_urls[urls_wikipedia] = {
-#         "status_code": response.status_code,
-#         "texto_pagina": response.text,
-#         # Adicione outras informações desejadas aqui
-#       }
-#     except requests.exceptions.RequestException as e:
-#       informacoes_urls[url] = {
-#         "status_code": "Erro",
-#         "texto_pagina": f"Erro ao acessar a URL: {e}",
-#       }
-#   return informacoes_urls 
-
-# Exemplo de uso
-# urls_exemplo = ["https://www.example.com", "https://www.google.com", "https://www.youtube.com/"]
-# informacoes_coletadas = fazer_requisicoes_http(urls_exemplo)
-# print(informacoes_coletadas)
+  
 
 #----------Fazer a requisicao http e extrair o genero musical de cada musica--------------------------------------
 
@@ -138,7 +113,8 @@ def extrair_genero_musical(url, tag_alvo, classe_alvo, atributo_titulo):
         texto_classe = classe_alvo.text.strip()
         return texto_classe
     else:
-      return "Tag com classe e tag alvo não encontrada"
+      texto_classe = "Não consta"
+      return texto_classe
 
   except requests.exceptions.RequestException:
     return "Erro ao acessar a URL"
@@ -165,7 +141,25 @@ def extrair_tempo_musica(url, classe_alvo):
     return "Erro ao acessar a URL"  
   
 # Genero musical
-
+genero_musical = []
+for url in urls_wikipedia:
+    tag_alvo = "td"
+    classe_alvo = "infobox-data category hlist"
+    atributo_titulo = "title"
+    genero_musical_texto = extrair_genero_musical(url, tag_alvo, classe_alvo, atributo_titulo)
+    genero_musical.append(genero_musical_texto)
+    #print("Print genero musical aqui....")  
+    #print(genero_musical_texto)
+  
+print(genero_musical[0])
+print(genero_musical[1])
+print(genero_musical[2])
+print(genero_musical[3])
+print(genero_musical[4])
+print(genero_musical[5])
+print(genero_musical[6])
+print("....")
+   
 # Duracao da musica
 
 # Exemplo pra pegar o genero musical
@@ -181,5 +175,35 @@ print(titulo_link_encontrado)
 url_exemplo = "https://en.wikipedia.org/wiki/Head_&_Heart"
 classe_alvo = "duration"  # Substitua pelo nome real da classe
 texto_tempo_musica = extrair_tempo_musica(url_exemplo, classe_alvo)
-print(texto_tempo_musica)       
+print(texto_tempo_musica)
 
+# codigo velho        
+
+# funcao para fazer a solicitacao http pro site wikipedia e colher mais informacao das musicas
+# def fazer_requisicoes_http(urls_wikipedia): 
+
+#   informacoes_urls = {}
+#   print("Entrou aqui....")  
+#   for url in urls_wikipedia:
+#     try:
+#       #print("Primeiro link do array....")
+#       print(urls_wikipedia)
+#       response = requests.get(urls_wikipedia)
+#       #response = requests.get(url)
+#       #informacoes_urls[url] = {
+#       informacoes_urls[urls_wikipedia] = {
+#         "status_code": response.status_code,
+#         "texto_pagina": response.text,
+#         # Adicione outras informações desejadas aqui
+#       }
+#     except requests.exceptions.RequestException as e:
+#       informacoes_urls[url] = {
+#         "status_code": "Erro",
+#         "texto_pagina": f"Erro ao acessar a URL: {e}",
+#       }
+#   return informacoes_urls 
+
+# Exemplo de uso
+# urls_exemplo = ["https://www.example.com", "https://www.google.com", "https://www.youtube.com/"]
+# informacoes_coletadas = fazer_requisicoes_http(urls_exemplo)
+# print(informacoes_coletadas)
