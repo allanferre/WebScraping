@@ -25,7 +25,7 @@ for paragraph in target_paragraphs:
     
 print("....")
 
-#divide a informacao em colunas ano, titulo e autor
+#divide a informacao nas colunas ano, titulo e autor
 def divide_text(text):
     # Divide o texto pelo caractere "-"
     partes = text.split(" – ")
@@ -37,33 +37,16 @@ def divide_text(text):
 
     return ano, titulo, autor
 
-# Texto de exemplo
-#texto = "1952 – Singin’ In The Rain by Gene Kelly"
-
-# ano_musica = []
-# titulo_musica = []
-# autor_musica = []
-# for musica in musicas_somente_text:
-# # Chama a função para dividir o texto
-#     ano, titulo, autor = divide_text(musica)
-#     ano_musica.append(ano)
-#     titulo_musica.append(titulo)
-#     autor_musica.append(autor)
-# # Imprime as informações
-#     print(f"Ano: {ano}")
-#     print(f"Título: {titulo}")
-#     print(f"Autor: {autor}")
-
 # Funcao pra criar o link das paginas Wikipedia
 urls_wikipedia = []
 ano_musica = []
 titulo_musica = []
 autor_musica = []
 
+# Função para dividir o texto
 for musica in musicas_somente_text:
-# Chama a função para dividir o texto
+
     ano, titulo, autor = divide_text(musica)
-    #formatacao do titulo da musica _
     titulo_formatado_espaco = titulo.replace(" ", "_")
     titulo_formatado = titulo_formatado_espaco.replace("’", "%27")
     url_wikipedia = f"https://en.wikipedia.org/wiki/{titulo_formatado}"
@@ -71,8 +54,8 @@ for musica in musicas_somente_text:
     ano_musica.append(ano)
     titulo_musica.append(titulo)
     autor_musica.append(autor)
-    #lista_musicas_1 = np.array([urls_wikipedia, ano_musica, titulo_musica, autor_musica])
-    
+
+# Primeira lista de musicas    
 lista_musicas_1 = []
 lista_musicas_1 = list(zip(urls_wikipedia, ano_musica, titulo_musica, autor_musica))        
 
@@ -87,56 +70,44 @@ print(lista_musicas_1[6])
 print("....")  
   
 
-#----------Fazer a requisicao http e extrair o genero musical de cada musica--------------------------------------
-
+# Funcao para fazer a requisicao http e extrair o genero e a duracao de cada musica
 def extrair_genero_musical(url, tag_alvo, classe_alvo, atributo_titulo):
 
   try:
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
 
-    # Encontrar a tag com a classe e tag alvo especificadas
     tag_com_link = soup.find(tag_alvo, class_=classe_alvo)
 
-    # Se a tag for encontrada
     if tag_com_link:
-      # Encontrar o link dentro da tag
       link = tag_com_link.find("a")
-
-      # Se o link for encontrado
       if link:
-        # Extrair o texto do título do link do atributo especificado
         titulo_link = link.get(atributo_titulo)
 
-        # Retornar o título do link
         return titulo_link
       else:
         texto_classe = classe_alvo.text.strip()
         return texto_classe
     else:
-      texto_classe = "Não consta genero"
+      texto_classe = "Nao consta genero"
       return texto_classe
 
   except requests.exceptions.RequestException:
     return "Erro ao acessar a URL"
-  
+
+# Funcao para fazer a requisicao http e extrair a duracao de cada musica  
 def extrair_tempo_musica(url, classe_alvo):
   try:
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
 
-    # Encontrar a tag com a classe especificada
     tag_classe_alvo = soup.find("span", class_=classe_alvo)
 
-    # Se a tag for encontrada
     if tag_classe_alvo:
-      # Extrair o texto da tag
       texto_classe = tag_classe_alvo.text.strip()
-
-      # Retornar o texto da classe
       return texto_classe
     else:
-      texto_classe = "Não consta tempo"
+      texto_classe = "Nao consta tempo"
       return texto_classe
 
   except requests.exceptions.RequestException:
@@ -153,15 +124,12 @@ for url in urls_wikipedia:
     genero_musical_texto = extrair_genero_musical(url, tag_alvo, classe_alvo, atributo_titulo)
     genero_musical.append(genero_musical_texto)
     # extrai a duracao da musica
-    classe_alvo = "duration"  # Substitua pelo nome real da classe
+    classe_alvo = "duration"
     texto_tempo_musica = extrair_tempo_musica(url, classe_alvo)
     duracao_musica.append(texto_tempo_musica)
-    #print("Print genero musical aqui....")  
-    #print(genero_musical_texto) 
 print("....")
 
 # Listas de musicas finais (juncao dos arrays)
-
 lista_musicas_final = []
 lista_musicas_final = list(zip(urls_wikipedia, ano_musica, titulo_musica, autor_musica, duracao_musica, genero_musical))
 print("Lista final de musicas:")
@@ -175,27 +143,10 @@ print(lista_musicas_final[6])
 print("....")
 
 # Funcao pra criar o arquivo json
-
-
-
 def criar_arquivo_json_musicas(lista_musicas_final, nome_arquivo):
-  """
-  Cria um arquivo JSON com as informações das músicas da lista `lista_musicas_final`.
-
-  Argumentos:
-    lista_musicas_final: Lista de listas contendo as informações das músicas no formato `[url, ano, nome, artista, duracao, genero]`.
-    nome_arquivo: Nome do arquivo JSON a ser criado.
-
-  Retorno:
-    Nenhum valor é retornado.
-  """
   
-  # Cria um dicionário vazio para armazenar as músicas
   dados_musicas = {}
-
-  # Itera por cada música na lista
   for musica in lista_musicas_final:
-    # Extrai as informações da música
     url = musica[0]
     ano = musica[1]
     nome = musica[2]
@@ -213,23 +164,14 @@ def criar_arquivo_json_musicas(lista_musicas_final, nome_arquivo):
       "genero": genero
     }
 
-    # Adiciona o dicionário da música ao dicionário principal
     dados_musicas[nome] = dados_musica
 
   # Converte o dicionário em uma string JSON
   dados_json = json.dumps(dados_musicas, indent=4)
 
-  # Abre o arquivo JSON para escrita
+  # Abre e popula o arquivo JSON
   with open(nome_arquivo, 'w') as arquivo:
-    # Escreve o conteúdo JSON no arquivo
     arquivo.write(dados_json)
-
-# Exemplo de uso
-# lista_musicas_final = [
-#   ["https://www.youtube.com/watch?v=jNQXAC9IVRw", 2020, "Blinding Lights", "The Weeknd", "3:39", "Pop"],
-#   ["https://www.youtube.com/watch?v=yTC2u_sT7MQ", 2019, "Dance Monkey", "Tones and I", "3:29", "Pop"],
-#   ["https://www.youtube.com/watch?v=7fP_824hO1Q", 2017, "Shape of You", "Ed Sheeran", "3:33", "Pop"],
-# ]
 
 nome_arquivo = "musicas.json"
 
