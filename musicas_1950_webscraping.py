@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from codigo_html import pagina_html_musicas
+import json
 import numpy as np # type: ignore
 
 
@@ -156,35 +157,101 @@ for url in urls_wikipedia:
     texto_tempo_musica = extrair_tempo_musica(url, classe_alvo)
     duracao_musica.append(texto_tempo_musica)
     #print("Print genero musical aqui....")  
-    #print(genero_musical_texto)
-  
-print(duracao_musica[0])
-print(duracao_musica[1])
-print(duracao_musica[2])
-print(duracao_musica[3])
-print(duracao_musica[4])
-print(duracao_musica[5])
-print(duracao_musica[6])
+    #print(genero_musical_texto) 
 print("....")
+
+# Listas de musicas finais (juncao dos arrays)
+
+lista_musicas_final = []
+lista_musicas_final = list(zip(urls_wikipedia, ano_musica, titulo_musica, autor_musica, duracao_musica, genero_musical))
+print("Lista final de musicas:")
+print(lista_musicas_final[0])
+print(lista_musicas_final[1])
+print(lista_musicas_final[2])
+print(lista_musicas_final[3])
+print(lista_musicas_final[4])
+print(lista_musicas_final[5])
+print(lista_musicas_final[6])
+print("....")
+
+# Funcao pra criar o arquivo json
+
+
+
+def criar_arquivo_json_musicas(lista_musicas_final, nome_arquivo):
+  """
+  Cria um arquivo JSON com as informações das músicas da lista `lista_musicas_final`.
+
+  Argumentos:
+    lista_musicas_final: Lista de listas contendo as informações das músicas no formato `[url, ano, nome, artista, duracao, genero]`.
+    nome_arquivo: Nome do arquivo JSON a ser criado.
+
+  Retorno:
+    Nenhum valor é retornado.
+  """
+  
+  # Cria um dicionário vazio para armazenar as músicas
+  dados_musicas = {}
+
+  # Itera por cada música na lista
+  for musica in lista_musicas_final:
+    # Extrai as informações da música
+    url = musica[0]
+    ano = musica[1]
+    nome = musica[2]
+    artista = musica[3]
+    duracao = musica[4]
+    genero = musica[5]
+
+    # Cria um dicionário com as informações da música
+    dados_musica = {
+      "url": url,
+      "ano": ano,
+      "nome": nome,
+      "artista": artista,
+      "duracao": duracao,
+      "genero": genero
+    }
+
+    # Adiciona o dicionário da música ao dicionário principal
+    dados_musicas[nome] = dados_musica
+
+  # Converte o dicionário em uma string JSON
+  dados_json = json.dumps(dados_musicas, indent=4)
+
+  # Abre o arquivo JSON para escrita
+  with open(nome_arquivo, 'w') as arquivo:
+    # Escreve o conteúdo JSON no arquivo
+    arquivo.write(dados_json)
+
+# Exemplo de uso
+# lista_musicas_final = [
+#   ["https://www.youtube.com/watch?v=jNQXAC9IVRw", 2020, "Blinding Lights", "The Weeknd", "3:39", "Pop"],
+#   ["https://www.youtube.com/watch?v=yTC2u_sT7MQ", 2019, "Dance Monkey", "Tones and I", "3:29", "Pop"],
+#   ["https://www.youtube.com/watch?v=7fP_824hO1Q", 2017, "Shape of You", "Ed Sheeran", "3:33", "Pop"],
+# ]
+
+nome_arquivo = "musicas.json"
+
+criar_arquivo_json_musicas(lista_musicas_final, nome_arquivo)
+
    
-# Duracao da musica
+# codigo velho
 
 # Exemplo pra pegar o genero musical
-url_exemplo = "https://en.wikipedia.org/wiki/As_It_Was"
-tag_alvo = "td"
-classe_alvo = "infobox-data category hlist"
-atributo_titulo = "title"
-titulo_link_encontrado = extrair_genero_musical(url_exemplo, tag_alvo, classe_alvo, atributo_titulo)
-print("Print genero musical aqui....")  
-print(titulo_link_encontrado) 
+# url_exemplo = "https://en.wikipedia.org/wiki/As_It_Was"
+# tag_alvo = "td"
+# classe_alvo = "infobox-data category hlist"
+# atributo_titulo = "title"
+# titulo_link_encontrado = extrair_genero_musical(url_exemplo, tag_alvo, classe_alvo, atributo_titulo)
+# print("Print genero musical aqui....")  
+# print(titulo_link_encontrado) 
 
-# Exemplo pra pegar o duracao da musica
-url_exemplo = "https://en.wikipedia.org/wiki/Head_&_Heart"
-classe_alvo = "duration"  # Substitua pelo nome real da classe
-texto_tempo_musica = extrair_tempo_musica(url_exemplo, classe_alvo)
-print(texto_tempo_musica)
-
-# codigo velho        
+# # Exemplo pra pegar o duracao da musica
+# url_exemplo = "https://en.wikipedia.org/wiki/Head_&_Heart"
+# classe_alvo = "duration"  # Substitua pelo nome real da classe
+# texto_tempo_musica = extrair_tempo_musica(url_exemplo, classe_alvo)
+# print(texto_tempo_musica)   
 
 # funcao para fazer a solicitacao http pro site wikipedia e colher mais informacao das musicas
 # def fazer_requisicoes_http(urls_wikipedia): 
