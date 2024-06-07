@@ -48,29 +48,28 @@ def gerar_grafico_duracao_media_por_musica(arquivo_json):
   with open(arquivo_json, 'r') as f:
     dados = json.load(f)
 
-  # Inicializar dicionário para armazenar durações médias
-  duracao_media_por_musica = defaultdict(list)
-
-  # Extrair dados e calcular durações médias
-  for musica in dados:
-    nome_musica = musica['nome']
-    duracao = musica['duracao']  # Assumindo que 'duracao' é um valor numérico
-    duracao_media_por_musica[nome_musica].append(duracao)
-
-  # Calcular durações médias
-  duracoes_medias = {nome_musica: sum(duracoes) / len(duracoes) for nome_musica, duracoes in duracao_media_por_musica.items()}
+ # Extrair dados
+#   nomes_musicas = [musica['nome'] for musica in dados]
+#   duracoes_musicas = [musica['duracao'] for musica in dados]  # Assumindo 'duracao' como valor numérico
+  
+  nome = []
+  duracao = []
+  for index, i in dados.items():
+        nome.append(i['nome'])
+        duracao.append(i['duracao'])
 
   # Gerar gráfico de barras tipo "dot bar"
-  plt.figure(figsize=(12, 8))
-  plt.bar(duracoes_medias.keys(), duracoes_medias.values(), color='skyblue', alpha=0.7)
+  plt.figure(figsize=(14, 8))
+  plt.bar(nome, duracao, color='skyblue', alpha=0.7)
   plt.xlabel("Nome da Música")
-  plt.xticks(rotation=45, ha='right', fontsize=8, tight_layout=True)
-  plt.ylabel("Duração Média (em minutos)")
-  plt.title("Duração Média das Músicas")
+  plt.xticks(rotation=30, ha='right', fontsize=8)
+  plt.ylabel("Duração (em minutos)")
+  plt.title("Nome e Duração das Músicas")
   plt.tight_layout()
 
   # Exibir o gráfico no VS Code
   plt.show()
+
          
           
 
@@ -78,5 +77,5 @@ def gerar_grafico_duracao_media_por_musica(arquivo_json):
 
 # Artistas mais citados
 arquivo_json = 'musicas.json'  # Substitua pelo caminho real do seu arquivo
-gerar_grafico_artistas_mais_citados(arquivo_json)
+gerar_grafico_duracao_media_por_musica(arquivo_json)
 
